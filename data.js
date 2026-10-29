@@ -9,14 +9,15 @@
   // Zero-padded two-digit number, Arabic-Indic digits for 'ar'
   window.fmtNum = (n, lang) => toLang(String(n).padStart(2, '0'), lang);
 
-  // "2026-07" -> "Jul 2026" / "يوليو ٢٠٢٦"; "present" is left for the caller to label
+  // "2026-07" -> "Jul 2026"; "2026-07-30" includes the day.
   const MONTHS = {
     en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     ar: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
   };
-  window.fmtDate = (ym, lang) => {
-    const [y, m] = ym.split('-');
-    return `${MONTHS[lang][Number(m) - 1]} ${toLang(y, lang)}`;
+  window.fmtDate = (date, lang) => {
+    const [y, m, d] = date.split('-');
+    const formatted = `${MONTHS[lang][Number(m) - 1]} ${toLang(y, lang)}`;
+    return d ? `${toLang(d, lang)} ${formatted}` : formatted;
   };
 })();
 
@@ -350,8 +351,7 @@ window.SKILLS = [
   }
 ];
 
-// Work history. start/end are "YYYY-MM" or "present" (see window.fmtDate).
-// Kemet and Alamir both read "present" exactly as on the CV.
+// Work history. Dates are "YYYY-MM", "YYYY-MM-DD", or "present" (see window.fmtDate).
 window.EXPERIENCE = [
   {
     id: "alameer",
@@ -387,7 +387,7 @@ window.EXPERIENCE = [
     location: { en: "Cairo, Egypt", ar: "القاهرة، مصر" },
     mode: { en: "On-site", ar: "من الموقع" },
     start: "2024-04",
-    end: "present",
+    end: "2026-07-30",
     bullets: {
       en: [
         "Administer IT infrastructure supporting 1,000+ users, serving as the primary escalation point for application, hardware, and access issues.",
